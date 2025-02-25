@@ -68,6 +68,9 @@
     "*.js": "javascriptreact",
     "*.jsx": "javascriptreact",
     "*.C": "c",
-    "sdl_image.h": "c"
+    "sdl_image.h": "c",
+    "sdl_revision.h": "c",
+    "sdl.h": "c",
+    "sdl_main.h": "c"
   }
 }

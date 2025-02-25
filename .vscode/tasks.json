@@ -27,7 +27,8 @@
             "command": "cmake",
             "args": [
                 "-S", ".",
-                "-B", "build"
+                "-B", "build",
+                "-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
             ],
             "group": "build",
             "problemMatcher": []
