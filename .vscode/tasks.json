@@ -27,9 +27,7 @@
             "command": "cmake",
             "args": [
                 "-S", ".",
-                "-B", "build",
-                "-DCMAKE_C_COMPILER=C:/MinGW/bin/gcc.exe",
-                "-DCMAKE_CXX_COMPILER=C:/MinGW/bin/g++.exe"
+                "-B", "build"
             ],
             "group": "build",
             "problemMatcher": []
