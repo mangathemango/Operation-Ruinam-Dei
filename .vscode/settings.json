@@ -61,5 +61,13 @@
     "**/*.rpa": true,
     "**/*.rpymc": true,
     "**/cache/": true
+  },
+  "files.associations": {
+    "*.ejs": "html",
+    "*.html": "html",
+    "*.js": "javascriptreact",
+    "*.jsx": "javascriptreact",
+    "*.C": "c",
+    "sdl_image.h": "c"
   }
 }

@@ -13,4 +13,4 @@ add_subdirectory(lib/SDL_image EXCLUDE_FROM_ALL)
 add_executable(Operation-Null-Mind WIN32 src/main.c)
 
 # Link to the actual SDL3 library.
-target_link_libraries(Operation-Null-Mind PRIVATE SDL3::SDL3)
+target_link_libraries(Operation-Null-Mind PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
