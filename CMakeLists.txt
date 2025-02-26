@@ -1,29 +1,40 @@
-cmake_minimum_required(VERSION 3.16)
-project(Operation-Null-Mind)
+cmake_minimum_required(VERSION 3.10)
+project(DantesResurrection VERSION 1.0)
 
-# Set the output directory for built objects.
-# This makes sure that the dynamic library goes into the build directory automatically.
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Specify the CMake toolchain file for vcpkg
-set(CMAKE_TOOLCHAIN_FILE "C:/vcpkg/scripts/buildsystems/vcpkg.cmake")
+# Set compiler flags
+add_compile_options(-Wall)
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
 
-# Find SDL3 and SDL3_image packages
-find_package(SDL2 REQUIRED)
-find_package(SDL2_image CONFIG REQUIRED)
+# Include directories
+include_directories(src)
 
-# Create your game executable target as usual
-add_executable(Operation-Null-Mind WIN32 src/main.c)
+# Add library directory
+link_directories(lib)
 
-# Link to the actual SDL3 library.
-target_link_libraries(Operation-Null-Mind PRIVATE 
-$<TARGET_NAME_IF_EXISTS:SDL2::SDL2main> $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static> 
-$<IF:$<TARGET_EXISTS:SDL2_image::SDL2_image>,SDL2_image::SDL2_image,SDL2_image::SDL2_image-static>)
+# Find all source files in src directory
+file(GLOB SOURCES "src/*.cpp")
 
-# Copy assets to the build output directory
-add_custom_command(TARGET Operation-Null-Mind POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${CMAKE_SOURCE_DIR}/Assets"
-    "$<TARGET_FILE_DIR:Operation-Null-Mind>/Assets"
+# Create executable
+add_executable(DantesResurrection ${SOURCES})
+
+# Find all DLLs in lib folder and copy them
+file(GLOB DLL_FILES "${CMAKE_SOURCE_DIR}/*.dll")
+file(COPY ${CMAKE_SOURCE_DIR}/lib/ DESTINATION ${CMAKE_BINARY_DIR} FILES_MATCHING PATTERN "*.dll")
+
+
+# Copy entire directory during configure time
+file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
+
+
+# Link libraries
+target_link_libraries(DantesResurrection
+    SDL2main
+    SDL2
+    SDL2_image
+    SDL2_mixer
+    SDL2_ttf
 )
