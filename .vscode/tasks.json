@@ -2,33 +2,13 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
-            "type": "shell",
-            "command": "g++",
-            "args": [
-                "-g",
-                "${workspaceFolder}/src/*.cpp",
-                "-I${workspaceFolder}/libs/include",
-                "-L${workspaceFolder}/libs/lib",
-                "-lSDL2",
-                "-lSDL2main",
-                "-o",
-                "${workspaceFolder}/build/output.exe"
-            ],
-            "group": {
-                "kind": "build"
-            },
-            "problemMatcher": ["$gcc"],
-            "detail": "Generated task by GitHub Copilot"
-        },
-        {
             "label": "cmake build",
             "type": "shell",
             "command": "cmake",
             "args": [
                 "-S", ".",
                 "-B", "build",
-                "-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+                "-G", "MinGW Makefiles"
             ],
             "group": "build",
             "problemMatcher": []
@@ -46,7 +26,7 @@
         {
             "label": "run",
             "type": "shell",
-            "command": "${workspaceFolder}/build/Debug/Operation-Null-Mind.exe",
+            "command": "${workspaceFolder}/build/Operation-Ruinam-Dei.exe",
             "group": {
               "kind": "test"
             },

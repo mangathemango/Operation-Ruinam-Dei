@@ -1,6 +1,8 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include "../inc/SDL2/SDL.h"
+#include "../inc/SDL2/SDL_image.h"
+#include "../inc/SDL2/SDL_main.h"
 
+#define SDL_MAIN_HANDLED 1
 #define WINDOW_TITLE "Hello World!"
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
@@ -8,7 +10,7 @@
 #define SCREEN_WIDTH 160
 #define SCREEN_HEIGHT 96
 
-int main(int argc, char* argv[]) {
+int WinMain(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_EVERYTHING);
     IMG_Init(IMG_INIT_PNG);
 
