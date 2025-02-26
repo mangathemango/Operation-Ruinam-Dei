@@ -16,6 +16,27 @@ static SDL_Renderer* renderer;
 static SDL_Texture* screenTexture;
 static int running = 1;
 
+/* Prepares the screen texture */
+int Prepare_Screen_Texture() {
+    screenTexture = IMG_LoadTexture(renderer, "Assets/Images/image.png");
+    
+    if (!screenTexture) {
+        SDL_Log("Failed to load image: %s", SDL_GetError());
+        return 1;
+    }
+    return 0;
+}
+
+/* Render the current texture */
+int Render_Texture() {
+    SDL_FRect dstrect = { 0, 0, 160, 96 };
+    SDL_RenderCopyF(renderer, screenTexture, NULL, &dstrect);
+    SDL_RenderDrawRectF(renderer, &dstrect);
+    SDL_RenderPresent(renderer);
+    return 0;
+}
+
+
 /* Start() is called once at the start of the program */
 int Start() {
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -45,12 +66,13 @@ int Start() {
     }
 
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    if(Prepare_Screen_Texture()) return 1;
     return 0;
 }
 
 /* Update() is called every frame of the program */
 int Update() {
-    if(Prepare_Screen_Texture()) return 1;
     if(Render_Texture()) return 1;
     return 0;
 }
@@ -72,26 +94,6 @@ int Handle_Event(SDL_Event *event) {
             
         default: break;
     }
-    return 0;
-}
-
-/* Prepares the screen texture */
-int Prepare_Screen_Texture() {
-    screenTexture = IMG_LoadTexture(renderer, "Assets/Images/image.png");
-    
-    if (!screenTexture) {
-        SDL_Log("Failed to load image: %s", SDL_GetError());
-        return 1;
-    }
-    return 0;
-}
-
-/* Render the current texture */
-int Render_Texture() {
-    SDL_FRect dstrect = { 0, 0, 160, 96 };
-    SDL_RenderCopyF(renderer, screenTexture, NULL, &dstrect);
-    SDL_RenderDrawRectF(renderer, &dstrect);
-    SDL_RenderPresent(renderer);
     return 0;
 }
 
