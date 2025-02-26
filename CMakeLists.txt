@@ -1,13 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
-project(DantesResurrection VERSION 1.0)
-
-# Set C++ standard
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+project(Operation-Ruinam-Dei VERSION 1.0)
 
 # Set compiler flags
 add_compile_options(-Wall)
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
+
 
 # Include directories
 include_directories(src)
@@ -16,22 +12,21 @@ include_directories(src)
 link_directories(lib)
 
 # Find all source files in src directory
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/*.c")
 
 # Create executable
-add_executable(DantesResurrection ${SOURCES})
+add_executable(Operation-Ruinam-Dei ${SOURCES})
 
 # Find all DLLs in lib folder and copy them
-file(GLOB DLL_FILES "${CMAKE_SOURCE_DIR}/*.dll")
 file(COPY ${CMAKE_SOURCE_DIR}/lib/ DESTINATION ${CMAKE_BINARY_DIR} FILES_MATCHING PATTERN "*.dll")
 
 
 # Copy entire directory during configure time
-file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/Assets DESTINATION ${CMAKE_BINARY_DIR})
 
 
 # Link libraries
-target_link_libraries(DantesResurrection
+target_link_libraries(Operation-Ruinam-Dei
     SDL2main
     SDL2
     SDL2_image
