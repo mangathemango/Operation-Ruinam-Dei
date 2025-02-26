@@ -18,7 +18,7 @@ file(GLOB SOURCES "src/*.c")
 add_executable(Operation-Ruinam-Dei ${SOURCES})
 
 # Find all DLLs in lib folder and copy them
-file(COPY ${CMAKE_SOURCE_DIR}/lib/ DESTINATION ${CMAKE_BINARY_DIR} FILES_MATCHING PATTERN "*.dll")
+file(COPY ${CMAKE_SOURCE_DIR}/bin/ DESTINATION ${CMAKE_BINARY_DIR} FILES_MATCHING PATTERN "*.dll")
 
 
 # Copy entire directory during configure time
