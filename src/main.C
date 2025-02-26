@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #define WINDOW_TITLE "Hello World!"
 #define WINDOW_WIDTH 640
@@ -8,10 +9,8 @@
 #define SCREEN_HEIGHT 96
 
 int main(int argc, char* argv[]) {
-
     SDL_Init(SDL_INIT_EVERYTHING);
-    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "direct3d");
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+    IMG_Init(IMG_INIT_PNG);
 
     SDL_Window* window = SDL_CreateWindow(WINDOW_TITLE,
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -22,9 +21,18 @@ int main(int argc, char* argv[]) {
 
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    SDL_Texture* screenTexture = SDL_CreateTexture(renderer,
-        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
+    SDL_Texture* screenTexture = IMG_LoadTexture(renderer, "Assets/Images/image.png");
+    
+    if (!screenTexture) {
+        SDL_Log("Failed to load image: %s", SDL_GetError());
+        return 1;
+    }
 
+    SDL_FRect dstrect = { 0, 0, 160, 96 };
+    SDL_RenderCopyF(renderer, screenTexture, NULL, &dstrect);
+    SDL_RenderDrawRectF(renderer, &dstrect);
+    SDL_RenderPresent(renderer);
+    
     SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
     SDL_RaiseWindow(window);
 
