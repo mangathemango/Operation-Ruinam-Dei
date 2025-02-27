@@ -1,6 +1,8 @@
 #include <app.h>
 
-/* Quit() is called once at the end of the program */
+/* 
+    This function is called when the program is about to quit.
+*/
 int App_Quit() {
     SDL_DestroyTexture(app.screenTexture);
     SDL_DestroyRenderer(app.renderer);

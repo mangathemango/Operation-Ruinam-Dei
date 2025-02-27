@@ -1,7 +1,10 @@
 #include <app.h>
 #include <temp_renderer.h>
 
-/* Start() is called once at the start of the program */
+/*
+    This function is called at the start of the program.
+    It initializes everything needed for the program to run. Like the window, renderer, and later, the game.
+*/
 int App_Start() {
     SDL_Init(SDL_INIT_EVERYTHING);
     IMG_Init(IMG_INIT_PNG);
