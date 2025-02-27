@@ -6,6 +6,6 @@ int App_Event_Handler(SDL_Event *event) {
     if (event->type == SDL_QUIT) {
         app.running = 0;
     }
-    Handle_Input_Event(event);
+    Input_Event_Handler(event);
     return 0;
 }

@@ -17,13 +17,7 @@ void Reset_Button(ButtonState *button) {
     button->released = false;
 }
 
-void Reset_All_Button() {
-
-
-    
-}
-
-void Update_Input() {
+void Input_PreUpdate() {
     Reset_Button(&_input.mouse.leftButton);
     Reset_Button(&_input.mouse.rightButton);
     Reset_Button(&_input.mouse.middleButton);
@@ -37,7 +31,8 @@ void Update_Input() {
     
     SDL_GetMouseState((int*) &_input.mouse.position.x, (int*) &_input.mouse.position.y);
 }
-void Handle_Input_Event(SDL_Event *event) {
+
+void Input_Event_Handler(SDL_Event *event) {
     switch (event->type) {
     case SDL_MOUSEMOTION:
         _input.mouse.position.x = event->motion.x;

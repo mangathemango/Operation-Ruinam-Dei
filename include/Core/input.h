@@ -44,7 +44,7 @@ typedef struct {
 
 extern const InputEvent * const Input;
 
-void Update_Input();
-void Handle_Input_Event(SDL_Event *event);
+void Input_PreUpdate();
+void Input_Event_Handler(SDL_Event *event);
 
 #endif
