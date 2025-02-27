@@ -8,7 +8,7 @@
 #define WINDOW_TITLE "Hello World!"
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
-#define WINDOW_FULLSCREEN 0
+#define WINDOW_FULLSCREEN 1
 #define SCREEN_WIDTH 160
 #define SCREEN_HEIGHT 96
 
@@ -19,7 +19,13 @@ static int running = 1;
 
 /* Prepares the screen texture */
 int Prepare_Screen_Texture() {
-    screenTexture = IMG_LoadTexture(renderer, "Assets/Images/image.png");
+    // Free previous texture if it exists
+    if (screenTexture) {
+        SDL_DestroyTexture(screenTexture);
+        screenTexture = NULL;
+    }
+    
+    screenTexture = IMG_LoadTexture(renderer, "Assets/Images/idle.png");
     
     if (!screenTexture) {
         SDL_Log("Failed to load image: %s", SDL_GetError());
@@ -68,22 +74,15 @@ int Start() {
     }
 
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-
+    
+    Prepare_Screen_Texture();
     return 0;
 }
 
 /* Update() is called every frame of the program */
 int Update() {
-    if (Input->keyboard.keys[SDL_SCANCODE_ESCAPE].pressed) {
-        running = 0;
-    }
-    if (Input->mouse.leftButton.pressed) {
-        Prepare_Screen_Texture();
-    } 
-    if (Input->mouse.leftButton.released) {
-        SDL_DestroyTexture(screenTexture);
-    }
-    Render_Texture();
+
+    
     return 0;
 }
 
@@ -102,7 +101,7 @@ int Handle_Event(SDL_Event *event) {
     if (event->type == SDL_QUIT) {
         running = 0;
     }
-    Update_Input(event);
+    Handle_Input_Event(event);
     return 0;
 }
 
@@ -112,6 +111,7 @@ int WinMain(int argc, char* argv[]) {
 
     SDL_Event event;
     while (running) {
+        Update_Input();
         while (SDL_PollEvent(&event)) {
             if(Handle_Event(&event)) return 1;
         }

@@ -3,81 +3,68 @@
 static InputEvent _input;
 const InputEvent * const Input = &_input;
 
-
-void Reset_Pressed_And_Released(ButtonState *button) {
-    if (button->pressed) {
-        button->pressed = false;
-    }
-    if (button->released) {
-        button->released = false;
-    }
+void Press_Button(ButtonState *button) {
+    button->pressed = true;
+    button->held = true; 
+}
+void Release_Button(ButtonState *button) {
+    button->released = true;
+    button->held = false; 
 }
 
-void Reset_All_Button_Pressed_And_Released() {
-    Reset_Pressed_And_Released(&_input.mouse.leftButton);
-    Reset_Pressed_And_Released(&_input.mouse.rightButton);
-    Reset_Pressed_And_Released(&_input.mouse.middleButton);
+void Reset_Button(ButtonState *button) {
+    button->pressed = false;
+    button->released = false;
+}
+
+void Reset_All_Button() {
+
+
+    
+}
+
+void Update_Input() {
+    Reset_Button(&_input.mouse.leftButton);
+    Reset_Button(&_input.mouse.rightButton);
+    Reset_Button(&_input.mouse.middleButton);
     for (int i = 0; i < SDL_NUM_SCANCODES; i++) {
-        Reset_Pressed_And_Released(&_input.keyboard.keys[i]);
-    } 
-}
+        Reset_Button(&_input.keyboard.keys[i]);
+    }
 
-void Update_Input(SDL_Event *event) {
-
-    Reset_All_Button_Pressed_And_Released();
-
+    _input.mouse.scrollUp = false;
+    _input.mouse.scrollDown = false;
+    _input.mouse.motion = (Vec2) {0, 0};
+    
     SDL_GetMouseState((int*) &_input.mouse.position.x, (int*) &_input.mouse.position.y);
-
+}
+void Handle_Input_Event(SDL_Event *event) {
     switch (event->type) {
     case SDL_MOUSEMOTION:
         _input.mouse.position.x = event->motion.x;
         _input.mouse.position.y = event->motion.y;
         break;
     case SDL_MOUSEBUTTONDOWN:
-        if (event->button.button == SDL_BUTTON_LEFT) {
-            _input.mouse.leftButton.pressed = true;
-            _input.mouse.leftButton.held = true;
-        }
-        if (event->button.button == SDL_BUTTON_RIGHT) {
-            _input.mouse.rightButton.pressed = true;
-            _input.mouse.rightButton.held = true;
-        }
-        if (event->button.button == SDL_BUTTON_MIDDLE) {
-            _input.mouse.middleButton.pressed = true;
-            _input.mouse.middleButton.held = true;
-        }
+        if (event->button.button == SDL_BUTTON_LEFT)   Press_Button(&_input.mouse.leftButton);
+        if (event->button.button == SDL_BUTTON_RIGHT)  Press_Button(&_input.mouse.rightButton);
+        if (event->button.button == SDL_BUTTON_MIDDLE) Press_Button(&_input.mouse.middleButton);
         break;
     case SDL_MOUSEBUTTONUP:
-        if (event->button.button == SDL_BUTTON_LEFT) {
-            _input.mouse.leftButton.released = true;
-            _input.mouse.leftButton.held = false;
-        }
-        if (event->button.button == SDL_BUTTON_RIGHT) {
-            _input.mouse.rightButton.released = true;
-            _input.mouse.rightButton.held = false;
-        }
-        if (event->button.button == SDL_BUTTON_MIDDLE) {
-            _input.mouse.middleButton.released = true;
-            _input.mouse.middleButton.held = false;
-        }
+        if (event->button.button == SDL_BUTTON_LEFT)   Release_Button(&_input.mouse.leftButton);
+        if (event->button.button == SDL_BUTTON_RIGHT)  Release_Button(&_input.mouse.rightButton);
+        if (event->button.button == SDL_BUTTON_MIDDLE) Release_Button(&_input.mouse.middleButton);
         break;
     case SDL_MOUSEWHEEL:
         if (event->wheel.y > 0) {
             _input.mouse.scrollUp = true;
         } else if (event->wheel.y < 0) {
             _input.mouse.scrollDown = true;
-        } else {
-            _input.mouse.scrollUp = false;
-            _input.mouse.scrollDown = false;
         }
         break;
     case SDL_KEYDOWN:
-        _input.keyboard.keys[event->key.keysym.scancode].pressed = true;
-        _input.keyboard.keys[event->key.keysym.scancode].held = true;
+        Press_Button(&_input.keyboard.keys[event->key.keysym.scancode]);
         break;
     case SDL_KEYUP:
-        _input.keyboard.keys[event->key.keysym.scancode].released = true;
-        _input.keyboard.keys[event->key.keysym.scancode].held = false;
+        Release_Button(&_input.keyboard.keys[event->key.keysym.scancode]);
         break;
     }
 }
