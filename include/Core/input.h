@@ -1,3 +1,5 @@
+#ifndef INPUT_H
+#define INPUT_H    
 #include <SDL.h>
 #include <vec2.h>
 #include <stdbool.h>
@@ -44,3 +46,5 @@ extern const InputEvent * const Input;
 
 void Update_Input();
 void Handle_Input_Event(SDL_Event *event);
+
+#endif

@@ -72,6 +72,7 @@
     "sdl_revision.h": "c",
     "sdl.h": "c",
     "sdl_main.h": "c",
-    "input.h": "c"
+    "input.h": "c",
+    "app.h": "c"
   }
 }
