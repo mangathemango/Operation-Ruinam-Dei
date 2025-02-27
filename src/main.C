@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_main.h>
+#include <input.h>
 
 #define WINDOW_TITLE "Hello World!"
 #define WINDOW_WIDTH 640
@@ -29,6 +30,7 @@ int Prepare_Screen_Texture() {
 
 /* Render the current texture */
 int Render_Texture() {
+    SDL_RenderClear(renderer);
     SDL_FRect dstrect = { 0, 0, 160, 96 };
     SDL_RenderCopyF(renderer, screenTexture, NULL, &dstrect);
     SDL_RenderDrawRectF(renderer, &dstrect);
@@ -67,13 +69,21 @@ int Start() {
 
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    if(Prepare_Screen_Texture()) return 1;
     return 0;
 }
 
 /* Update() is called every frame of the program */
 int Update() {
-    if(Render_Texture()) return 1;
+    if (Input->keyboard.keys[SDL_SCANCODE_ESCAPE].pressed) {
+        running = 0;
+    }
+    if (Input->mouse.leftButton.pressed) {
+        Prepare_Screen_Texture();
+    } 
+    if (Input->mouse.leftButton.released) {
+        SDL_DestroyTexture(screenTexture);
+    }
+    Render_Texture();
     return 0;
 }
 
@@ -89,11 +99,10 @@ int Quit() {
 
 /* Handle_Event() is called every time an event is detected (keyboard, mouse, etc.) */
 int Handle_Event(SDL_Event *event) {
-    switch (event->type){
-        case SDL_QUIT: case SDL_KEYDOWN:  running = 0;  break;
-            
-        default: break;
+    if (event->type == SDL_QUIT) {
+        running = 0;
     }
+    Update_Input(event);
     return 0;
 }
 
