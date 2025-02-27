@@ -1,8 +1,8 @@
 #define SDL_MAIN_HANDLED 1
 
-#include "../inc/SDL2/SDL.h"
-#include "../inc/SDL2/SDL_image.h"
-#include "../inc/SDL2/SDL_main.h"
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_main.h>
 
 #define WINDOW_TITLE "Hello World!"
 #define WINDOW_WIDTH 640

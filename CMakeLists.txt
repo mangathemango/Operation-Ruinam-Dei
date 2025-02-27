@@ -10,6 +10,7 @@ include_directories(src)
 
 # Add library directory
 link_directories(lib)
+include_directories(include/SDL2)
 
 # Find all source files in src directory
 file(GLOB SOURCES "src/*.c")
@@ -19,7 +20,6 @@ add_executable(Operation-Ruinam-Dei ${SOURCES})
 
 # Find all DLLs in lib folder and copy them
 file(COPY ${CMAKE_SOURCE_DIR}/bin/ DESTINATION ${CMAKE_BINARY_DIR} FILES_MATCHING PATTERN "*.dll")
-
 
 # Copy entire directory during configure time
 file(COPY ${CMAKE_SOURCE_DIR}/Assets DESTINATION ${CMAKE_BINARY_DIR})
