@@ -1,6 +1,10 @@
 #include <temp_renderer.h>
 #include <app.h>
 
+/*
+!   This is a temporary renderer for 5112 image. It will be replaced with a more robust renderer in the future.
+*/
+
 /* Prepares the screen texture */
 int Prepare_Screen_Texture() {
     // Free previous texture if it exists
