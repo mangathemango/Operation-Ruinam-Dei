@@ -60,7 +60,13 @@
     "**/*.rpyc": true,
     "**/*.rpa": true,
     "**/*.rpymc": true,
-    "**/cache/": true
+    "**/cache/": true,
+    ".git": true,
+    ".vscode": true,
+    "build": true,
+    "bin": true,
+    "Deliverables": true,
+    "lib": true,
   },
   "files.associations": {
     "*.ejs": "html",
