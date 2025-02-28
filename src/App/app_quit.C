@@ -1,7 +1,7 @@
 #include <app.h>
 
 /* 
-    This function is called when the program is about to quit.
+*   This function is called when the program is about to quit.
 */
 int App_Quit() {
     SDL_DestroyTexture(app.screenTexture);
