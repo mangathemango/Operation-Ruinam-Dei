@@ -5,7 +5,9 @@
 *   This function is called every frame of the program AFTER App_Event_Handler().
 */
 int App_PostUpdate() {
-    Player_Update();
-    Player_Render();
+    SDL_RenderClear(app.setup.renderer);
+    Player_PostUpdate();
+
+    SDL_RenderPresent(app.setup.renderer);
     return 0;
 }

@@ -19,9 +19,14 @@ typedef struct {
 
 extern PlayerData player;
 
-int Player_Start();
+
+void Player_Input_Handler();
 int Player_Render();
+
+int Player_Start();
+int Player_PostUpdate();
+
+// Actions
 int Player_Move(Vec2 direction);
-int Player_Update();
 
 #endif

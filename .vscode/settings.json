@@ -78,6 +78,7 @@
     "sdl.h": "c",
     "sdl_main.h": "c",
     "input.h": "c",
-    "app.h": "c"
+    "app.h": "c",
+    "player.h": "c"
   }
 }
