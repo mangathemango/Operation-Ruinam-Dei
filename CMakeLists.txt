@@ -10,19 +10,28 @@ include_directories(src)
 
 # Add library directory
 link_directories(lib)
-include_directories(include/SDL2)
+
+# Include all directories in include folder
+include_directories(${CMAKE_SOURCE_DIR}/include)
+file(GLOB_RECURSE INCLUDE_DIRS LIST_DIRECTORIES true "${CMAKE_SOURCE_DIR}/include/*")
+foreach(DIR ${INCLUDE_DIRS})
+    if(IS_DIRECTORY ${DIR})
+    include_directories(${DIR})
+    endif()
+endforeach()
+
+# Include Asses folder
+include_directories(Assets)
 
 # Find all source files in src directory
-file(GLOB SOURCES "src/*.c")
+file(GLOB_RECURSE SOURCES "src/*.c")
+set_source_files_properties(${SOURCES} PROPERTIES LANGUAGE C)
 
 # Create executable
 add_executable(Operation-Ruinam-Dei ${SOURCES})
 
 # Find all DLLs in lib folder and copy them
 file(COPY ${CMAKE_SOURCE_DIR}/bin/ DESTINATION ${CMAKE_BINARY_DIR} FILES_MATCHING PATTERN "*.dll")
-
-# Copy entire directory during configure time
-file(COPY ${CMAKE_SOURCE_DIR}/Assets DESTINATION ${CMAKE_BINARY_DIR})
 
 
 # Link libraries

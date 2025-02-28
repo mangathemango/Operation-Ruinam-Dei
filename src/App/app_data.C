@@ -1,0 +1,20 @@
+#include <app.h>
+
+AppData app = {
+    .setup = {
+        .window = NULL,
+        .renderer = NULL,
+        .screenTexture = NULL,
+    },
+    .state = {
+        .running = true,
+    },
+    .config = {
+        .window_title = "Operation Ruinam Dei" ,
+        .window_width = 1024 ,
+        .window_height = 768 ,
+        .window_fullscreen = false ,
+        .screen_width = 240 ,
+        .screen_height = 144 
+    }
+};

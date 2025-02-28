@@ -60,7 +60,12 @@
     "**/*.rpyc": true,
     "**/*.rpa": true,
     "**/*.rpymc": true,
-    "**/cache/": true
+    "**/cache/": true,
+    ".git": true,
+    ".vscode": true,
+    "bin": true,
+    "Deliverables": true,
+    "lib": true,
   },
   "files.associations": {
     "*.ejs": "html",
@@ -71,6 +76,9 @@
     "sdl_image.h": "c",
     "sdl_revision.h": "c",
     "sdl.h": "c",
-    "sdl_main.h": "c"
+    "sdl_main.h": "c",
+    "input.h": "c",
+    "app.h": "c",
+    "player.h": "c"
   }
 }
