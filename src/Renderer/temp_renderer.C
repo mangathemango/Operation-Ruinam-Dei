@@ -8,14 +8,14 @@
 /* Prepares the screen texture */
 int Prepare_Screen_Texture() {
     // Free previous texture if it exists
-    if (app.screenTexture) {
-        SDL_DestroyTexture(app.screenTexture);
-        app.screenTexture = NULL;
+    if (app.setup.screenTexture) {
+        SDL_DestroyTexture(app.setup.screenTexture);
+        app.setup.screenTexture = NULL;
     }
     
-    app.screenTexture = IMG_LoadTexture(app.renderer, "Assets/Images/idle.png");
+    app.setup.screenTexture = IMG_LoadTexture(app.setup.renderer, "Assets/Images/idle.png");
     
-    if (!app.screenTexture) {
+    if (!app.setup.screenTexture) {
         SDL_Log("Failed to load image: %s", SDL_GetError());
         return 1;
     }
@@ -24,10 +24,10 @@ int Prepare_Screen_Texture() {
 
 /* Render the current texture */
 int Render_Texture() {
-    SDL_RenderClear(app.renderer);
+    SDL_RenderClear(app.setup.renderer);
     SDL_FRect dstrect = { 0, 0, 160, 96 };
-    SDL_RenderCopyF(app.renderer, app.screenTexture, NULL, &dstrect);
-    SDL_RenderDrawRectF(app.renderer, &dstrect);
-    SDL_RenderPresent(app.renderer);
+    SDL_RenderCopyF(app.setup.renderer, app.setup.screenTexture, NULL, &dstrect);
+    SDL_RenderDrawRectF(app.setup.renderer, &dstrect);
+    SDL_RenderPresent(app.setup.renderer);
     return 0;
 }

@@ -8,28 +8,29 @@ int Initialize_SDL() {
     IMG_Init(IMG_INIT_PNG);
 
     // Set up window
-    app.window = SDL_CreateWindow(WINDOW_TITLE,
+    app.setup.window = SDL_CreateWindow(app.config.window_title,
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_FULLSCREEN ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+        app.config.window_width, app.config.window_height, 
+        app.config.window_fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
     
-    if (!app.window) {
+    if (!app.setup.window) {
         SDL_Log("Failed to create window: %s", SDL_GetError());
         return 1;
     }
 
-    SDL_SetWindowPosition(app.window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-    SDL_RaiseWindow(app.window);
+    SDL_SetWindowPosition(app.setup.window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    SDL_RaiseWindow(app.setup.window);
 
 
     // Set up renderer
-    app.renderer = SDL_CreateRenderer(app.window, -1,
+    app.setup.renderer = SDL_CreateRenderer(app.setup.window, -1,
         SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
     
-    if (!app.renderer) {
+    if (!app.setup.renderer) {
         SDL_Log("Failed to create renderer: %s", SDL_GetError());
         return 1;
     }
 
-    SDL_RenderSetLogicalSize(app.renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+    SDL_RenderSetLogicalSize(app.setup.renderer, app.config.screen_width, app.config.screen_height);
     return 0;
 }

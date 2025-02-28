@@ -19,7 +19,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     if (App_Start()) return 1;
 
     SDL_Event event;
-    while (app.running) {
+    while (app.state.running) {
         if(App_PreUpdate()) return 1;
         while (SDL_PollEvent(&event)) {
             if(App_Event_Handler(&event)) return 1;

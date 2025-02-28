@@ -3,19 +3,31 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
-
-#define WINDOW_TITLE "Hello World!"
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 480
-#define WINDOW_FULLSCREEN 0
-#define SCREEN_WIDTH 160
-#define SCREEN_HEIGHT 96
+#include <stdbool.h>
 
 typedef struct {
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Texture* screenTexture;
-    int running;
+} AppSetup;
+
+typedef struct {
+    bool running;
+} AppState;
+
+typedef struct {
+    char* window_title;
+    int window_width;
+    int window_height;
+    bool window_fullscreen;
+    int screen_width;
+    int screen_height;
+} AppConfig;
+
+typedef struct {
+    AppSetup setup;
+    AppState state;
+    AppConfig config;
 } AppData;
 
 extern AppData app;
