@@ -10,11 +10,11 @@ AppData app = {
         .running = true,
     },
     .config = {
-        .window_title = "Hello world" ,
-        .window_width = 640 ,
-        .window_height = 480 ,
+        .window_title = "Operation Ruinam Dei" ,
+        .window_width = 1024 ,
+        .window_height = 768 ,
         .window_fullscreen = false ,
-        .screen_width = 160 ,
-        .screen_height = 96 
+        .screen_width = 240 ,
+        .screen_height = 144 
     }
 };
