@@ -16,5 +16,9 @@ AppData app = {
         .window_fullscreen = false ,
         .screen_width = 240 ,
         .screen_height = 144 
+    },
+
+    .time = {
+        .deltaTime = 0
     }
 };
