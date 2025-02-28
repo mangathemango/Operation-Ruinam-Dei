@@ -2,7 +2,7 @@
 
 PlayerData player = {
     .state = {
-        .position = {0,0},
+        .position = {120,72},
     },
     .config = {
         .speed = 1,
