@@ -1,3 +1,5 @@
+#ifndef PLAYER_H
+#define PLAYER_H
 #include <vec2.h>
 
 typedef struct {
@@ -17,4 +19,9 @@ typedef struct {
 
 extern PlayerData player;
 
+int Player_Start();
 int Player_Render();
+int Player_Move(Vec2 direction);
+int Player_Update();
+
+#endif

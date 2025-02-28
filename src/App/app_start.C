@@ -1,4 +1,5 @@
 #include <app.h>
+#include <player.h>
 #include <initialize_SDL.h>
 #include <temp_renderer.h>
 
@@ -9,5 +10,6 @@
 int App_Start() {
     if (Initialize_SDL()) return 1;
     if (Prepare_Screen_Texture()) return 1;
+    if (Player_Start()) return 1;
     return 0;
 }

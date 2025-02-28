@@ -63,7 +63,6 @@
     "**/cache/": true,
     ".git": true,
     ".vscode": true,
-    "build": true,
     "bin": true,
     "Deliverables": true,
     "lib": true,
