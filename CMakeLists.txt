@@ -24,7 +24,8 @@ endforeach()
 include_directories(Assets)
 
 # Find all source files in src directory
-file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true "src/*.c")
+file(GLOB_RECURSE SOURCES "src/*.c")
+set_source_files_properties(${SOURCES} PROPERTIES LANGUAGE C)
 
 # Create executable
 add_executable(Operation-Ruinam-Dei ${SOURCES})
