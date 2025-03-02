@@ -1,6 +1,10 @@
 #include <player.h>
 #include <app.h>
 
+/* 
+*   Teleport the player to the other side of the screen if they go off-screen.
+!   This is just for temporary player movement debugging, and will be removed later.
+*/
 void Player_Post_Position()
 {
     //This is the logic for the player to wrap around the screen.
@@ -18,6 +22,9 @@ void Player_Post_Position()
     }
 }
 
+/*
+*   This function is called inside App_PostUpdate().
+*/
 int Player_PostUpdate() {
     Player_Input_Handler();
     Player_Post_Position();

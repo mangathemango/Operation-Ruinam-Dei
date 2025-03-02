@@ -1,6 +1,9 @@
 #include <player.h>
 #include <app.h>
 
+/*
+*   Renders the player sprite based on the player's position.
+*/
 int Player_Render() {
     SDL_FRect dstrect = {
         player.state.position.x - player.config.spriteSize.x / 2, 
