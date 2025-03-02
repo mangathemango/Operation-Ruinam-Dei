@@ -13,10 +13,11 @@ const TimeSystem * const Time = &time;
 
 void Time_PreUpdate() {
     float currentTick = SDL_GetTicks();
-    time.deltaTimeSeconds = (currentTick - time.previousTick) / 1000.0f;
+    time.deltaTimeSeconds = (currentTick - time.previousTick) / 1000;
     time.previousTick = currentTick;
     time.scaledDeltaTimeSeconds = time.deltaTimeSeconds * time.timeScale;
     time.programElapsedTimeSeconds += time.deltaTimeSeconds;
+
 }
 
 void Time_SetTimeScale(float scale) {

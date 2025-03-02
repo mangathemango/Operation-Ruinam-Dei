@@ -5,7 +5,7 @@ PlayerData player = {
         .position = {120,72},
     },
     .config = {
-        .speed = 1,
+        .speed = 100,
         .sprite = "Assets/Images/idle.png",
         .spriteSize = {32,20},
     }
