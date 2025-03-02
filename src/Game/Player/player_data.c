@@ -1,5 +1,10 @@
 #include <player.h>
 
+/*
+    @file player_data.c
+*   This file contains the player's data initialization.
+*/
+
 PlayerData player = {
     .state = {
         .position = {120,72},
