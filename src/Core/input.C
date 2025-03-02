@@ -34,7 +34,7 @@ void Reset_Button(ButtonState *button) {
 
 /*
 *   This function is called inside App_PreUpdate().
-?   It resets all the buttons and mouse motion.
+?   It retrieves the mouse's state and resets all the mouse/keyboard buttons.
 */
 void Input_PreUpdate() {
     // Reset all the buttons
