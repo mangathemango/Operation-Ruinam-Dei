@@ -5,11 +5,12 @@ typedef struct {
     float deltaTimeSeconds;
     float timeScale;
     float scaledDeltaTimeSeconds;
-    double totalTimeSeconds;
+    double programElapsedTimeSeconds;
+    double previousTick;
 } TimeSystem;
 
 extern const TimeSystem * const Time;
 
-void Time_Update();
+void Time_PreUpdate();
 void Time_SetTimeScale(float scale);
 void Time_ResetTotalTime();

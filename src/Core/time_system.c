@@ -4,15 +4,19 @@ TimeSystem time = {
     .deltaTimeSeconds = 0,
     .timeScale = 1,
     .scaledDeltaTimeSeconds = 0,
-    .totalTimeSeconds = 0
+    .programElapsedTimeSeconds = 0,
+    .previousTick = 0
 };
 
-extern const TimeSystem * const Time = &time;
+const TimeSystem * const Time = &time;
 
-void Time_Update() {
-    time.deltaTimeSeconds = (float)SDL_GetTicks() / 1000.0f;
+
+void Time_PreUpdate() {
+    float currentTick = SDL_GetTicks();
+    time.deltaTimeSeconds = (currentTick - time.previousTick) / 1000.0f;
+    time.previousTick = currentTick;
     time.scaledDeltaTimeSeconds = time.deltaTimeSeconds * time.timeScale;
-    time.totalTimeSeconds += time.deltaTimeSeconds;
+    time.programElapsedTimeSeconds += time.deltaTimeSeconds;
 }
 
 void Time_SetTimeScale(float scale) {
@@ -20,5 +24,5 @@ void Time_SetTimeScale(float scale) {
 }
 
 void Time_ResetTotalTime() {
-    time.totalTimeSeconds = 0;
+    time.programElapsedTimeSeconds = 0;
 }

@@ -7,6 +7,6 @@ PlayerData player = {
     .config = {
         .speed = 1,
         .sprite = "Assets/Images/idle.png",
-        .spriteSize = {16,10},
+        .spriteSize = {32,20},
     }
 };

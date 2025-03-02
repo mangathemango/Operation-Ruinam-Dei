@@ -1,7 +1,6 @@
 #include <app.h>
 #include <player.h>
 #include <initialize_SDL.h>
-#include <temp_renderer.h>
 
 /*
 *   This function is called at the start of the program.
