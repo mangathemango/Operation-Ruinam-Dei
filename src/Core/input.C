@@ -34,6 +34,7 @@ void Reset_Button(ButtonState *button) {
 
 /*
 *   This function is called inside App_PreUpdate().
+?   It resets all the buttons and mouse motion.
 */
 void Input_PreUpdate() {
     // Reset all the buttons
@@ -58,6 +59,8 @@ void Input_PreUpdate() {
 
 /*
 *   This function is called inside App_Event_Handler().
+?   It updates the InputEvent struct based on the SDL_Event.
+    @param event The SDL_Event to update the InputEvent struct with.
 */
 void Input_Event_Handler(SDL_Event *event) {
     switch (event->type) {
