@@ -28,5 +28,6 @@ int Player_PostUpdate();
 
 // Actions
 int Player_Move(Vec2 direction);
+int Player_Dash(Vec2 direction);
 
 #endif
