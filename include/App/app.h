@@ -1,3 +1,10 @@
+/*
+    @file app.h
+*   This file contains the app struct and its functions.
+?   The app struct is used to keep track of the app's setup, state, and configuration.
+?   For example, the window, renderer, screen size, and a running state.
+*/
+
 #ifndef APP_H
 #define APP_H
 

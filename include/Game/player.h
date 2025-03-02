@@ -1,3 +1,9 @@
+/*
+    @file player.h
+*   This file contains the player's data, actions, and functions.
+    TODO: Add player stats and abilities struct as well.
+*/
+
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <vec2.h>

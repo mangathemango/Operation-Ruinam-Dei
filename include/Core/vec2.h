@@ -1,3 +1,9 @@
+/*
+    @file vec2.h
+*   This file contains the Vec2 struct and its functions.
+?   The Vec2 struct is a 2D vector that can be used for positions, directions, velocities etc.
+*/
+
 #ifndef VEC2_H
 #define VEC2_H
 typedef struct 

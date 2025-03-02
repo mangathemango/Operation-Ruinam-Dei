@@ -1,3 +1,11 @@
+/*
+    @file time_system.h
+*   This file contains the time system struct and its functions.
+?   The time system struct is used to keep track of the program's time, delta time, and time scale.
+?   Time delta is the time between the current frame and the previous frame.
+?   It's super useful for making sure that the game runs at the same speed on different fps.
+*/
+
 #pragma once
 #include <SDL.h>
 
