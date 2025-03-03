@@ -85,3 +85,8 @@ Vec2 Vec2_Lerp(Vec2 a, Vec2 b, float t) {
     return (Vec2) {a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t};
 }
 
+Vec2 Vec2_Rotate(Vec2 v, float angle) {
+    float x = v.x * cos(angle) - v.y * sin(angle);
+    float y = v.x * sin(angle) + v.y * cos(angle);
+    return (Vec2) {x, y};
+}
