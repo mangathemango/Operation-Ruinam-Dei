@@ -7,15 +7,19 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <vec2.h>
+#include <animation.h>
+#include <stdbool.h>
 
 typedef struct {
     Vec2 position;
+    bool moving;    
 } PlayerState;
 
 typedef struct {
     float speed;
     char* sprite;
     Vec2 spriteSize;
+    Animation* animation;
 } PlayerConfig;
 
 typedef struct {
@@ -31,10 +35,13 @@ int Player_Render();
 
 int Player_Start();
 int Player_PostUpdate();
+int Player_Preupdate();
 
 // Actions
 int Player_Move(Vec2 direction);
 int Player_Dash(Vec2 direction);
 void Player_WrapAroundScreen(); //! This is temporary and will be removed later.
 
+// Animations
+int Player_AnimationInit();
 #endif
