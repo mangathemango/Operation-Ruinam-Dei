@@ -56,7 +56,8 @@ void Animation_AddClip(Animation* animation, const char* name,
     animation->clipCount++;
 }
 
-AnimationFrame* Animation_GetFramesFromGrid(SDL_Texture *texture, Vec2 frameSize, int frameCount) {
+AnimationFrame* Animation_GetFramesFromGrid(SDL_Texture *texture, Vec2 frameSize, int startFrameIndex, int endFrameIndex) {
+    int frameCount = endFrameIndex - startFrameIndex + 1;
     if (!texture || frameSize.x <= 0 || frameSize.y <= 0 || frameCount <= 0) {
         return NULL;
     }
@@ -70,8 +71,16 @@ AnimationFrame* Animation_GetFramesFromGrid(SDL_Texture *texture, Vec2 frameSize
     int frameIndex = 0;
     for (int y = 0; y < textureHeight && frameIndex < frameCount; y += frameSize.y) {
         for (int x = 0; x < textureWidth && frameIndex < frameCount; x += frameSize.x) {
-            frames[frameIndex].position = (Vec2) {x, y};
-            frames[frameIndex].size = frameSize;
+            if (frameIndex < startFrameIndex) {
+                frameIndex++;
+                continue;
+            }
+            int currentIndex = frameIndex - startFrameIndex;
+            if (currentIndex > endFrameIndex) {
+                break;
+            }
+            frames[currentIndex].position = (Vec2) {x, y};
+            frames[currentIndex].size = frameSize;
             frameIndex++;
         }
     }
@@ -83,14 +92,13 @@ AnimationFrame* Animation_GetFramesFromGrid(SDL_Texture *texture, Vec2 frameSize
 static int Animation_FindClipIndex(Animation* animation, const char* clipName) {
     for (int i = 0; i < animation->clipCount; i++) {
         if (strcmp(animation->clips[i].name, clipName) == 0) {
-            SDL_Log("Clip found: %s at index %d", clipName, i);
             return i;
         }
     }
     return -1;
 }
 
-void nAnimation_Play(Animation* animation, const char* clipName) {
+void Animation_Play(Animation* animation, const char* clipName) {
     int clipIndex = Animation_FindClipIndex(animation, clipName);
     if (clipIndex < 0) return;
     

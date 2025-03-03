@@ -41,7 +41,7 @@ void Animation_Destroy(Animation* animation);
 void Animation_AddClip(Animation* animation, const char* name, 
                       AnimationFrame* frames, int frameCount, 
                       float frameDuration, bool looping);
-AnimationFrame* Animation_GetFramesFromGrid(SDL_Texture *texture, Vec2 frameSize, int frameCount);
+AnimationFrame* Animation_GetFramesFromGrid(SDL_Texture *texture, Vec2 frameSize, int startFrameIndex, int endFrameIndex);
 // Animation control
 void Animation_Play(Animation* animation, const char* clipName);
 void Animation_Stop(Animation* animation);
