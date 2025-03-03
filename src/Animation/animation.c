@@ -83,13 +83,14 @@ AnimationFrame* Animation_GetFramesFromGrid(SDL_Texture *texture, Vec2 frameSize
 static int Animation_FindClipIndex(Animation* animation, const char* clipName) {
     for (int i = 0; i < animation->clipCount; i++) {
         if (strcmp(animation->clips[i].name, clipName) == 0) {
+            SDL_Log("Clip found: %s at index %d", clipName, i);
             return i;
         }
     }
     return -1;
 }
 
-void Animation_Play(Animation* animation, const char* clipName) {
+void nAnimation_Play(Animation* animation, const char* clipName) {
     int clipIndex = Animation_FindClipIndex(animation, clipName);
     if (clipIndex < 0) return;
     
