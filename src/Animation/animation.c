@@ -4,6 +4,17 @@
 #include <app.h>
 #include <time_system.h>
 
+/*
+*   Creates an animation from a spritesheet.
+?   Can handle spritesheets with multiple rows and columns.
+?   After creating an animation, call Animation_AddClipFromGrid to add animation clips
+!   This only works with spritesheets with constant frame size
+
+    @param spritesheet A pointer to the spritesheet texture
+    @param How big each frame is in pixels.
+    @param How many frames there are in the spritesheet. Don't count the blank frames btw.
+
+*/
 Animation* Animation_Create(SDL_Texture* spritesheet, Vec2 frameSize, int frameCount) {
     Animation* animation = malloc(sizeof(Animation));
     if (!animation) return NULL;
@@ -19,6 +30,11 @@ Animation* Animation_Create(SDL_Texture* spritesheet, Vec2 frameSize, int frameC
     return animation;
 }
 
+/*
+*   Destroys an animation
+
+    @param animation A pointer to the animation
+*/
 void Animation_Destroy(Animation* animation) {
     // Free clip names and frame arrays
     for (int i = 0; i < animation->clipCount; i++) {
@@ -33,7 +49,18 @@ void Animation_Destroy(Animation* animation) {
     free(animation);
 }
 
+/*
+*   Add an animation clip from an animation's spritesheet.
 
+?   Note: Index numbering starts from 0, and goes from left to right, then up to down.
+    @param animation The pointer to the animation
+    @param name The name of the clip, for example "idle", "walk", etc.
+    @param startFrameIndex The index of the beginning frame of the clip.
+    @param endFrameIndex The index of the last frame of the clip.
+    @param frameDuration The amount of time between frames.
+    @param looping Whether the animation is looped.
+    @returns 0 if successful, 1 if an error occured.
+*/
 int Animation_AddClipFromGrid(Animation* animation, const char* name,
                                         int startFrameIndex, int endFrameIndex,
                                         float frameDuration, bool looping ) {
@@ -86,7 +113,13 @@ int Animation_AddClipFromGrid(Animation* animation, const char* name,
     return 0;
 }
 
-// Find clip index by name
+/*
+*   Finds the animation clip with its name
+
+    @param animation A pointer to the animation
+    @param clipName The name of the clip
+    @returns The index of the animationClip
+*/
 static int Animation_FindClipIndex(Animation* animation, const char* clipName) {
     for (int i = 0; i < animation->clipCount; i++) {
         if (strcmp(animation->clips[i].name, clipName) == 0) {
@@ -96,6 +129,14 @@ static int Animation_FindClipIndex(Animation* animation, const char* clipName) {
     return -1;
 }
 
+/*
+*   Plays an animation clip.
+
+?   If the target clip is currently playing, this function does nothing.
+
+    @param animation A pointer to the animation
+    @param clipName The name of the animation clip. For example "idle", "walk", etc.
+*/
 void Animation_Play(Animation* animation, const char* clipName) {
     if (animation->currentClip >= 0 && animation->isPlaying) {
         if (strcmp(animation->clips[animation->currentClip].name, clipName) == 0) {
@@ -104,8 +145,6 @@ void Animation_Play(Animation* animation, const char* clipName) {
     }
     int clipIndex = Animation_FindClipIndex(animation, clipName);
     if (clipIndex < 0) return;
-
-    
     
     animation->currentClip = clipIndex;
     animation->currentFrame = 0;
@@ -114,20 +153,38 @@ void Animation_Play(Animation* animation, const char* clipName) {
     animation->direction = 1;
 }
 
+/*
+*   Stops the current animation clip
+    @param animation A pointer to the animation
+*/
 void Animation_Stop(Animation* animation) {
     animation->isPlaying = false;
     animation->currentFrame = 0;
     animation->timer = 0.0f;
 }
 
+/*
+*   Pause the current animation clip
+    @param animation A pointer to the animation
+*/
 void Animation_Pause(Animation* animation) {
     animation->isPlaying = false;
 }
 
+/*
+*   Resume the current animation clip
+    @param animation A pointer to the animation
+*/
 void Animation_Resume(Animation* animation) {
     animation->isPlaying = true;
 }
 
+/*
+*   Updates the current animation.
+
+?   This function should be called every frame inside App_PostUpdate();
+    @param animation A pointer to the animation
+*/
 void Animation_Update(Animation* animation) {
     if (!animation->isPlaying || animation->currentClip < 0) {
         return;
@@ -164,6 +221,14 @@ void Animation_Update(Animation* animation) {
     }
 }
 
+
+/*
+*   Renders an animation
+
+    @param animation A pointer to the animation
+    @param destPosition The position to draw
+    @param destSize The size of the drawn image
+*/
 void Animation_Render(Animation* animation, Vec2 destPosition, Vec2 destSize) {
     // Make sure we have a valid clip
     if (animation->currentClip < 0 || animation->currentClip >= animation->clipCount) {
