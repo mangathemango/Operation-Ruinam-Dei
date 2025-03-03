@@ -80,6 +80,7 @@
     "input.h": "c",
     "app.h": "c",
     "player.h": "c",
-    "time.h": "c"
+    "time.h": "c",
+    "animation.h": "c"
   }
 }

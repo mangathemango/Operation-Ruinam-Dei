@@ -42,4 +42,6 @@ int Player_Move(Vec2 direction);
 int Player_Dash(Vec2 direction);
 void Player_WrapAroundScreen(); //! This is temporary and will be removed later.
 
+// Animations
+int Player_AnimationInit();
 #endif

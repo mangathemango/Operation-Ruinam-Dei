@@ -4,14 +4,16 @@
 #include <app.h>
 #include <time_system.h>
 
-Animation* Animation_Create(SDL_Texture* spritesheet) {
+Animation* Animation_Create(SDL_Texture* spritesheet, Vec2 frameSize, int frameCount) {
     Animation* animation = malloc(sizeof(Animation));
-    animation->texture = spritesheet;
+    if (!animation) return NULL;
+    animation->spritesheet = spritesheet;
     animation->clips = NULL;
     animation->clipCount = 0;
+    animation->frameSize = frameSize;
+    animation->frameCount = frameCount;
     animation->currentClip = -1;
     animation->currentFrame = 0;
-    animation->timer = 0.0f;
     animation->isPlaying = false;
     animation->direction = 1;
     return animation;
@@ -31,9 +33,37 @@ void Animation_Destroy(Animation* animation) {
     free(animation);
 }
 
-void Animation_AddClip(Animation* animation, const char* name, 
-                      AnimationFrame* frames, int frameCount, 
-                      float frameDuration, bool looping) {
+
+int Animation_AddClipFromGrid(Animation* animation, const char* name,
+                                        int startFrameIndex, int endFrameIndex,
+                                        float frameDuration, bool looping ) {
+
+    int frameCount = endFrameIndex - startFrameIndex + 1;
+    if (startFrameIndex < 0 || endFrameIndex > animation->frameCount) return 1;
+    
+    int spritesheetWidth, spritesheetHeight;
+    SDL_QueryTexture(animation->spritesheet, NULL, NULL, &spritesheetWidth, &spritesheetHeight);
+    
+    AnimationFrame* frames = malloc(frameCount * sizeof(AnimationFrame));
+    if (!frames) return 1;
+    
+    int frameIndex = 0;
+    for (int y = 0; y < spritesheetHeight; y += animation->frameSize.y) {
+        for (int x = 0; x < spritesheetWidth; x += animation->frameSize.x) {
+            if (frameIndex < startFrameIndex) {
+                frameIndex++;
+                continue;
+            }
+            if (frameIndex > endFrameIndex) {
+                break;
+            }
+            int currentIndex = frameIndex - startFrameIndex;
+            frames[currentIndex].position = (Vec2) {x, y};
+            frames[currentIndex].size = animation->frameSize;
+            frameIndex++;
+        }
+    }
+
     // Expand clips array
     animation->clips = realloc(animation->clips, (animation->clipCount + 1) * sizeof(AnimationClip));
     
@@ -46,46 +76,14 @@ void Animation_AddClip(Animation* animation, const char* name,
     // Allocate and copy frames
     clip->frames = malloc(frameCount * sizeof(AnimationFrame));
     memcpy(clip->frames, frames, frameCount * sizeof(AnimationFrame));
-    
+    free(frames);
     // Set other properties
     clip->frameCount = frameCount;
     clip->frameDuration = frameDuration;
     clip->looping = looping;
     
-    // Increment clip count
     animation->clipCount++;
-}
-
-AnimationFrame* Animation_GetFramesFromGrid(SDL_Texture *texture, Vec2 frameSize, int startFrameIndex, int endFrameIndex) {
-    int frameCount = endFrameIndex - startFrameIndex + 1;
-    if (!texture || frameSize.x <= 0 || frameSize.y <= 0 || frameCount <= 0) {
-        return NULL;
-    }
-    
-    int textureWidth, textureHeight;
-    SDL_QueryTexture(texture, NULL, NULL, &textureWidth, &textureHeight);
-    
-    AnimationFrame* frames = malloc(frameCount * sizeof(AnimationFrame));
-    if (!frames) return NULL;
-    
-    int frameIndex = 0;
-    for (int y = 0; y < textureHeight && frameIndex < frameCount; y += frameSize.y) {
-        for (int x = 0; x < textureWidth && frameIndex < frameCount; x += frameSize.x) {
-            if (frameIndex < startFrameIndex) {
-                frameIndex++;
-                continue;
-            }
-            int currentIndex = frameIndex - startFrameIndex;
-            if (currentIndex > endFrameIndex) {
-                break;
-            }
-            frames[currentIndex].position = (Vec2) {x, y};
-            frames[currentIndex].size = frameSize;
-            frameIndex++;
-        }
-    }
-    
-    return frames;
+    return 0;
 }
 
 // Find clip index by name
@@ -99,13 +97,15 @@ static int Animation_FindClipIndex(Animation* animation, const char* clipName) {
 }
 
 void Animation_Play(Animation* animation, const char* clipName) {
+    if (animation->currentClip >= 0 && animation->isPlaying) {
+        if (strcmp(animation->clips[animation->currentClip].name, clipName) == 0) {
+            return;
+        }
+    }
     int clipIndex = Animation_FindClipIndex(animation, clipName);
     if (clipIndex < 0) return;
+
     
-    // If already playing this clip, do nothing
-    if (animation->currentClip == clipIndex && animation->isPlaying) {
-        return;
-    }
     
     animation->currentClip = clipIndex;
     animation->currentFrame = 0;
@@ -193,7 +193,7 @@ void Animation_Render(Animation* animation, Vec2 destPosition, Vec2 destSize) {
     // Render the frame with the specified flip
     SDL_RenderCopyEx(
         app.setup.renderer,
-        animation->texture,
+        animation->spritesheet,
         &srcRect,
         &dstRect,
         0,      // No rotation

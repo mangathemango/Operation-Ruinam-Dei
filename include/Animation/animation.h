@@ -20,10 +20,12 @@ typedef struct {
 } AnimationClip;
 
 typedef struct {
-    SDL_Texture* texture;   // Spritesheet texture
-    AnimationClip* clips;   // Array of different animations
+    SDL_Texture* spritesheet;   // Spritesheet texture
+    AnimationClip* clips;  // Array of different animations
     int clipCount;          // Number of animation clips
     
+    Vec2 frameSize; 
+    int frameCount;
     // Current animation state
     int currentClip;        // Currently active clip index
     int currentFrame;       // Current frame within the clip
@@ -34,14 +36,13 @@ typedef struct {
 
 
 // Create and destroy animations
-Animation* Animation_Create(SDL_Texture* spritesheet);
+Animation* Animation_Create(SDL_Texture* spritesheet, Vec2 frameSize, int frameCount);
 void Animation_Destroy(Animation* animation);
 
 // Add animation clips
-void Animation_AddClip(Animation* animation, const char* name, 
-                      AnimationFrame* frames, int frameCount, 
-                      float frameDuration, bool looping);
-AnimationFrame* Animation_GetFramesFromGrid(SDL_Texture *texture, Vec2 frameSize, int startFrameIndex, int endFrameIndex);
+int Animation_AddClipFromGrid(Animation* animation, const char* name,
+                                int startFrameIndex, int endFrameIndex,
+                                float frameDuration, bool looping );
 // Animation control
 void Animation_Play(Animation* animation, const char* clipName);
 void Animation_Stop(Animation* animation);
