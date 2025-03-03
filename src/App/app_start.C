@@ -12,6 +12,5 @@ int App_Start() {
     if (Initialize_SDL()) return 1;
     if (Player_Start()) return 1;
     test_emitter = ParticleEmitter_CreateDefault();
-    test_emitter->custom_Movement = Particle_LinearMovement;
     return 0;
 }

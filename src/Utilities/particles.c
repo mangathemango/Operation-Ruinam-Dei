@@ -2,19 +2,20 @@
 #include <app.h>
 #include <time_system.h>
 #include <timer.h>
+#include <random.h>
 
 ParticleEmitter Default_ParticleEmitter = {
     .position = {100, 100},
     .direction = {0, -1},
     .angleRange = 360,
     .particleLifetime = 1,
-    .particleSpeed = 100,
+    .particleSpeed = 200,
     .emissionRate = 0.1,
-    .emissionNumber = 1,
+    .emissionNumber = 10,
     .maxParticles = 100,
     .particles = NULL,
     .readyIndex = 0,
-    .custom_Movement = Particle_LinearMovement
+    .custom_Movement = Particle_DeceleratedMovement
 };
 
 ParticleEmitter* test_emitter = NULL;
@@ -39,7 +40,7 @@ void ParticleEmitter_SetMaxParticles(ParticleEmitter* emitter, int maxParticles)
 void ParticleEmitter_Emit(ParticleEmitter* emitter) {
     if (emitter->readyIndex == emitter->maxParticles) return;
     emitter->particles[emitter->readyIndex].position = emitter->position;
-    emitter->particles[emitter->readyIndex].direction = emitter->direction;
+    emitter->particles[emitter->readyIndex].direction = Vec2_RotateDegrees(emitter->direction, RandFloat(-emitter->angleRange / 2, emitter->angleRange / 2));
     emitter->particles[emitter->readyIndex].speed = emitter->particleSpeed;
     emitter->particles[emitter->readyIndex].alive = true;
     emitter->particles[emitter->readyIndex].maxLifeTime = emitter->particleLifetime;
@@ -62,6 +63,7 @@ void ParticleEmitter_UpdateParticles(ParticleEmitter* emitter) {
         emitter->particles[i].timeAlive += Time->deltaTimeSeconds;
         if (emitter->particles[i].timeAlive >= emitter->particles[i].maxLifeTime) {
             emitter->particles[i].alive = false;
+            emitter->readyIndex = i;
         }
         if (emitter->custom_Movement) {
             emitter->custom_Movement(&emitter->particles[i]);
@@ -96,18 +98,13 @@ void ParticleEmitter_Render(ParticleEmitter* emitter) {
         SDL_Rect rect = {
             emitter->particles[i].position.x,
             emitter->particles[i].position.y,
-            5,
-            5
+            1,
+            1
         };
         SDL_SetRenderDrawColor(app.setup.renderer, 255, 255, 255, 255);
         SDL_RenderFillRect(app.setup.renderer, &rect);
     }
 }
-
-
-
-
-
 
 void Particle_LinearMovement(Particle* particle) {
     Vec2 velocity = {
@@ -119,7 +116,7 @@ void Particle_LinearMovement(Particle* particle) {
 }
 
 void Particle_AcceleratedMovement(Particle* particle) {
-    particle->speed *= 1.1;
+    particle->speed += 100 * Time->deltaTimeSeconds;
     Vec2 velocity = {
         particle->direction.x * particle->speed,
         particle->direction.y * particle->speed
@@ -129,7 +126,7 @@ void Particle_AcceleratedMovement(Particle* particle) {
 }
 
 void Particle_DeceleratedMovement(Particle* particle) {
-    particle->speed /= 1.1;
+    particle->speed -= Time->deltaTimeSeconds * particle->speed * 2.7;
     Vec2 velocity = {
         particle->direction.x * particle->speed,
         particle->direction.y * particle->speed
@@ -155,6 +152,6 @@ void Particle_RandomMovement(Particle* particle) {
     };
     particle->position.x += velocity.x * Time->deltaTimeSeconds;
     particle->position.y += velocity.y * Time->deltaTimeSeconds;
-    particle->position.x += (rand() % 3 - 1) * 10;
-    particle->position.y += (rand() % 3 - 1) * 10;
+    particle->position.x += (rand() % 3 - 1);
+    particle->position.y += (rand() % 3 - 1);
 }
