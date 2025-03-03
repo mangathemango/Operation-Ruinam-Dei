@@ -56,19 +56,26 @@ void Animation_AddClip(Animation* animation, const char* name,
     animation->clipCount++;
 }
 
-AnimationFrame* Animation_GetFixedSizedFrames(SDL_Texture *texture, Vec2 frameSize, int frameCount) {
-    Vec2 textureSize = {0,0};
-    SDL_QueryTexture(texture, NULL, NULL, (int*)&textureSize.x,(int*)&textureSize.y);
-
+AnimationFrame* Animation_GetFramesFromGrid(SDL_Texture *texture, Vec2 frameSize, int frameCount) {
+    if (!texture || frameSize.x <= 0 || frameSize.y <= 0 || frameCount <= 0) {
+        return NULL;
+    }
+    
+    int textureWidth, textureHeight;
+    SDL_QueryTexture(texture, NULL, NULL, &textureWidth, &textureHeight);
+    
     AnimationFrame* frames = malloc(frameCount * sizeof(AnimationFrame));
+    if (!frames) return NULL;
+    
     int frameIndex = 0;
-    for (int y = 0; y < textureSize.y; y += frameSize.y) {
-        for (int x = 0; x < textureSize.x && frameIndex < frameCount; x += frameSize.x) {
+    for (int y = 0; y < textureHeight && frameIndex < frameCount; y += frameSize.y) {
+        for (int x = 0; x < textureWidth && frameIndex < frameCount; x += frameSize.x) {
             frames[frameIndex].position = (Vec2) {x, y};
             frames[frameIndex].size = frameSize;
             frameIndex++;
         }
     }
+    
     return frames;
 }
 
@@ -148,7 +155,7 @@ void Animation_Update(Animation* animation) {
     }
 }
 
-void Animation_Render(Animation* animation, Vec2 destPosition) {
+void Animation_Render(Animation* animation, Vec2 destPosition, Vec2 destSize) {
     // Make sure we have a valid clip
     if (animation->currentClip < 0 || animation->currentClip >= animation->clipCount) {
         return;
@@ -161,7 +168,7 @@ void Animation_Render(Animation* animation, Vec2 destPosition) {
     // Create source rectangle (area in the spritesheet)
     SDL_Rect srcRect = {
         frame->position.x, 
-        frame->position.x, 
+        frame->position.y, 
         frame->size.x, 
         frame->size.y       
     };
@@ -170,8 +177,8 @@ void Animation_Render(Animation* animation, Vec2 destPosition) {
     SDL_Rect dstRect = {
         destPosition.x, 
         destPosition.y, 
-        frame->size.x, 
-        frame->size.y
+        destSize.x,
+        destSize.y
     };
     
     // Render the frame with the specified flip
@@ -182,6 +189,6 @@ void Animation_Render(Animation* animation, Vec2 destPosition) {
         &dstRect,
         0,      // No rotation
         NULL,   // No rotation center (default)
-        NULL  // Flip horizontally/vertically if needed
+        SDL_FLIP_NONE  // Flip horizontally/vertically if needed
     );
 }

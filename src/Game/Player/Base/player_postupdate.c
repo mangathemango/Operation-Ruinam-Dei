@@ -7,7 +7,7 @@
 */
 int Player_PostUpdate() {
     Player_Input_Handler();
-    Player_WrapAroundScreen();
+    Animation_Update(player.config.animation);
     Player_Render();
     return 0;
 }

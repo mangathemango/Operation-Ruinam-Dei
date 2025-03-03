@@ -7,6 +7,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <vec2.h>
+#include <animation.h>
 
 typedef struct {
     Vec2 position;
@@ -16,6 +17,7 @@ typedef struct {
     float speed;
     char* sprite;
     Vec2 spriteSize;
+    Animation* animation;
 } PlayerConfig;
 
 typedef struct {
