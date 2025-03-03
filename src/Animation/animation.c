@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <app.h>
+#include <time_system.h>
 
 Animation* Animation_Create(SDL_Texture* spritesheet) {
     Animation* animation = malloc(sizeof(Animation));
@@ -55,14 +56,20 @@ void Animation_AddClip(Animation* animation, const char* name,
     animation->clipCount++;
 }
 
-AnimationFrame* Animation_GetFixedSizeFrames(SDL_Texture *texture, Vec2 frameSize, int frameNumbers) {
+AnimationFrame* Animation_GetFixedSizedFrames(SDL_Texture *texture, Vec2 frameSize, int frameCount) {
     Vec2 textureSize = {0,0};
     SDL_QueryTexture(texture, NULL, NULL, (int*)&textureSize.x,(int*)&textureSize.y);
-    for (int x = 0; x < textureSize.x; x += frameSize.x) {
-        for (int y = 0; y < textureSize.y; y += frameSize.y) {
-            frameNumbers++;
+
+    AnimationFrame* frames = malloc(frameCount * sizeof(AnimationFrame));
+    int frameIndex = 0;
+    for (int y = 0; y < textureSize.y; y += frameSize.y) {
+        for (int x = 0; x < textureSize.x && frameIndex < frameCount; x += frameSize.x) {
+            frames[frameIndex].position = (Vec2) {x, y};
+            frames[frameIndex].size = frameSize;
+            frameIndex++;
         }
     }
+    return frames;
 }
 
 // Find clip index by name
@@ -105,7 +112,7 @@ void Animation_Resume(Animation* animation) {
     animation->isPlaying = true;
 }
 
-void Animation_Update(Animation* animation, float deltaTime) {
+void Animation_Update(Animation* animation) {
     if (!animation->isPlaying || animation->currentClip < 0) {
         return;
     }
@@ -113,7 +120,7 @@ void Animation_Update(Animation* animation, float deltaTime) {
     AnimationClip* clip = &animation->clips[animation->currentClip];
     
     // Add time to timer
-    animation->timer += deltaTime;
+    animation->timer += Time->deltaTimeSeconds;
     
     // Check if it's time for next frame
     if (animation->timer >= clip->frameDuration) {
@@ -141,8 +148,7 @@ void Animation_Update(Animation* animation, float deltaTime) {
     }
 }
 
-void Animation_Render(Animation* animation, SDL_Renderer* renderer, 
-                     int x, int y, SDL_RendererFlip flip) {
+void Animation_Render(Animation* animation, Vec2 destPosition) {
     // Make sure we have a valid clip
     if (animation->currentClip < 0 || animation->currentClip >= animation->clipCount) {
         return;
@@ -162,20 +168,20 @@ void Animation_Render(Animation* animation, SDL_Renderer* renderer,
     
     // Create destination rectangle (where to render on screen)
     SDL_Rect dstRect = {
-        x, 
-        y, 
+        destPosition.x, 
+        destPosition.y, 
         frame->size.x, 
         frame->size.y
     };
     
     // Render the frame with the specified flip
     SDL_RenderCopyEx(
-        renderer,
+        app.setup.renderer,
         animation->texture,
         &srcRect,
         &dstRect,
         0,      // No rotation
         NULL,   // No rotation center (default)
-        flip    // Flip horizontally/vertically if needed
+        NULL  // Flip horizontally/vertically if needed
     );
 }
