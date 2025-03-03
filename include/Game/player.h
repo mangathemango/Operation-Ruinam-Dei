@@ -19,6 +19,12 @@ typedef struct {
 
 extern PlayerData player;
 
+typedef struct{
+    int CurrentDirection;
+    enum {UP, LEFT, DOWN, RIGHT} directionValue;
+} Direction;
+
+extern Direction direction;
 
 void Player_Input_Handler();
 int Player_Render();
