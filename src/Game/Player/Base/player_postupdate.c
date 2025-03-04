@@ -10,7 +10,7 @@ int Player_PostUpdate() {
     {
         dashing();
     }
-    else
+    if(player.state.movementLocked == false)// ! DONT USE ELSE, CAUSE I IF THE DASHING IS IN COOLDOWN, THE MOVEMENT GETS UNLOCKED
     {
         ResetDirection();
         Player_Input_Handler();
