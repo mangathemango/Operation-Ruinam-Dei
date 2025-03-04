@@ -46,5 +46,8 @@ ParticleEmitter* ParticleEmitter_CreateDefault() {
         free(emitter);
         return NULL;
     }
+    for (int i = 0; i < emitter->maxParticles; i++) {
+        emitter->particles[i].alive = false;
+    }
     return emitter;
 }
