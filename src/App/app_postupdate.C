@@ -1,6 +1,6 @@
 #include <app.h>
 #include <player.h>
-#include <particles.h>
+#include <particle_emitterpresets.h>
 
 /* 
 *   This function is called every frame of the program AFTER App_Event_Handler().
@@ -18,7 +18,7 @@ int App_PostUpdate() {
     test_emitter->position = player.state.position;
     ParticleEmitter_Update(test_emitter);
     Player_PostUpdate();
-    
+
     // Reset render target to window
     SDL_SetRenderTarget(app.setup.renderer, NULL);
     

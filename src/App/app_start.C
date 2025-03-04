@@ -2,7 +2,7 @@
 #include <player.h>
 #include <initialize_SDL.h>
 #include <random.h>
-#include <particles.h>
+#include <particle_emitterpresets.h>
 /*
 *   This function is called at the start of the program.
 ?   It initializes everything needed for the program to run. Like the window, renderer, and later, the game.

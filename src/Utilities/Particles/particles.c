@@ -4,34 +4,6 @@
 #include <timer.h>
 #include <random.h>
 
-ParticleEmitter Default_ParticleEmitter = {
-    .position = {100, 100},
-    .direction = {0, -1},
-    .angleRange = 360,
-    .particleLifetime = 1,
-    .particleSpeed = 200,
-    .emissionRate = 0.1,
-    .emissionNumber = 10,
-    .maxParticles = 100,
-    .particles = NULL,
-    .readyIndex = 0,
-    .custom_Movement = Particle_DeceleratedMovement
-};
-
-ParticleEmitter* test_emitter = NULL;
-
-ParticleEmitter* ParticleEmitter_CreateDefault() {
-    ParticleEmitter* emitter = malloc(sizeof(ParticleEmitter));
-    if (!emitter) return NULL;
-    memcpy(emitter, &Default_ParticleEmitter, sizeof(ParticleEmitter));
-    emitter->particles = malloc(sizeof(Particle) * emitter->maxParticles);
-    if (!emitter->particles) {
-        free(emitter);
-        return NULL;
-    }
-    return emitter;
-}
-
 void ParticleEmitter_SetMaxParticles(ParticleEmitter* emitter, int maxParticles) {
     emitter->maxParticles = maxParticles;
     emitter->particles = realloc(emitter->particles, sizeof(Particle) * emitter->maxParticles);
@@ -104,54 +76,4 @@ void ParticleEmitter_Render(ParticleEmitter* emitter) {
         SDL_SetRenderDrawColor(app.setup.renderer, 255, 255, 255, 255);
         SDL_RenderFillRect(app.setup.renderer, &rect);
     }
-}
-
-void Particle_LinearMovement(Particle* particle) {
-    Vec2 velocity = {
-        particle->direction.x * particle->speed,
-        particle->direction.y * particle->speed
-    };
-    particle->position.x += velocity.x * Time->deltaTimeSeconds;
-    particle->position.y += velocity.y * Time->deltaTimeSeconds;
-}
-
-void Particle_AcceleratedMovement(Particle* particle) {
-    particle->speed += 100 * Time->deltaTimeSeconds;
-    Vec2 velocity = {
-        particle->direction.x * particle->speed,
-        particle->direction.y * particle->speed
-    };
-    particle->position.x += velocity.x * Time->deltaTimeSeconds;
-    particle->position.y += velocity.y * Time->deltaTimeSeconds;
-}
-
-void Particle_DeceleratedMovement(Particle* particle) {
-    particle->speed -= Time->deltaTimeSeconds * particle->speed * 2.7;
-    Vec2 velocity = {
-        particle->direction.x * particle->speed,
-        particle->direction.y * particle->speed
-    };
-    particle->position.x += velocity.x * Time->deltaTimeSeconds;
-    particle->position.y += velocity.y * Time->deltaTimeSeconds;
-}
-
-void Particle_SpiralMovement(Particle* particle) {
-    Vec2 velocity = {
-        particle->direction.x * particle->speed,
-        particle->direction.y * particle->speed
-    };
-    particle->position.x += velocity.x * Time->deltaTimeSeconds;
-    particle->position.y += velocity.y * Time->deltaTimeSeconds;
-
-}
-
-void Particle_RandomMovement(Particle* particle) {
-    Vec2 velocity = {
-        particle->direction.x * particle->speed,
-        particle->direction.y * particle->speed
-    };
-    particle->position.x += velocity.x * Time->deltaTimeSeconds;
-    particle->position.y += velocity.y * Time->deltaTimeSeconds;
-    particle->position.x += (rand() % 3 - 1);
-    particle->position.y += (rand() % 3 - 1);
 }

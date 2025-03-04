@@ -82,6 +82,7 @@
     "player.h": "c",
     "time.h": "c",
     "animation.h": "c",
-    "particles.h": "c"
+    "particles.h": "c",
+    "particle_movement.h": "c"
   }
 }
