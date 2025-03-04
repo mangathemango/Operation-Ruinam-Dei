@@ -16,7 +16,8 @@
 */
 int Player_Move(Vec2 direction) {
     if (Vec2_Magnitude(direction) == 0) return 0;
-    
+    if (player.state.movementLocked) return 0;
+    player.state.direction = Vec2_Add(player.state.direction, direction);
     player.state.moving = true;
     player.state.position.x += direction.x * (player.config.speed * Time->deltaTimeSeconds);
     player.state.position.y += direction.y * (player.config.speed * Time->deltaTimeSeconds);
@@ -44,9 +45,4 @@ void Player_WrapAroundScreen()
     else if (player.state.position.y <= -10) {
         player.state.position.y = app.config.screen_height;
     }
-}
-
-void ResetDirection() //Reseting player.state.direction to 0, 0
-{
-    player.state.direction = Vec2_Zero;
 }

@@ -11,6 +11,7 @@ PlayerData player = {
     },
     .config = {
         .speed = 100,
+        .dashSpeed = 1000,
         .sprite = "Assets/Images/idle.png",
         .spriteSize = {32,32},
         .animation = NULL,

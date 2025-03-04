@@ -13,12 +13,14 @@
 typedef struct {
     Vec2 position;
     Vec2 direction; //This is added to know the players last direction
+    bool dashing; //This is added to know if the player is dashing
     bool movementLocked; //to know if the movement is locked
     bool moving;    
 } PlayerState;
 
 typedef struct {
     float speed;
+    float dashSpeed;
     char* sprite;
     Vec2 spriteSize;
     Animation* animation;
@@ -39,13 +41,13 @@ int Player_Start();
 int Player_PostUpdate();
 int Player_Preupdate();
 
-// Actions
+// Movement
 int Player_Move(Vec2 direction);
-int Player_Dash(Vec2 direction);
 void Player_WrapAroundScreen(); //! This is temporary and will be removed later.
-void ResetDirection();
-int dashing();
-int dashCooldown();
+
+// Skills
+int Player_Dash();
+int Player_HandleDash();
 
 // Animations
 int Player_AnimationInit();
