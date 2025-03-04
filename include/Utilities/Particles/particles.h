@@ -22,7 +22,7 @@ typedef struct {
     // Physics properties
     Vec2 velocity;             // Current velocity vector
     Vec2 acceleration;         // Current acceleration
-    float dampening;           // Individual drag factor (0-1)
+    float drag;           // Individual drag factor (0-1)
     
     // Behavior
     float initialSpeed;        // Starting speed (for reference/reset)
@@ -57,7 +57,8 @@ typedef struct {
     // Visual Properties (to add)
     SDL_Color startColor;                // Initial particle color
     SDL_Color endColor;                  // Final particle color
-    Vec2 particleSize;                   // Size of particles
+    Vec2 startSize;
+    Vec2 endSize;                   // Size of particles
     SDL_Texture* particleTexture;        // Optional texture (NULL = rectangle)
     
     // Additional Physics (to add)

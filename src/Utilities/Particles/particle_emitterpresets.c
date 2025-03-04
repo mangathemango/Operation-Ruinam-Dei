@@ -4,27 +4,28 @@ ParticleEmitter Default_ParticleEmitter = {
     .position = {100, 100},
 
     .direction = {0, -1},
-    .emissionRate = 0.1,
-    .emissionNumber = 10,
+    .emissionRate = 0.02,
+    .emissionNumber = 1,
     .maxParticles = 100,
-    .angleRange = 360,
+    .angleRange = 60,
 
     .active = true,
     .emitterLifetime = 0,
     .emitterAge = 0,
     .loopCount = -1,
 
-    .particleLifetime = 1,
-    .particleSpeed = 200,
-    .custom_Movement = Particle_DeceleratedMovement,
+    .particleLifetime = 2,
+    .particleSpeed = 400,
+    .custom_Movement = NULL,
 
-    .startColor = {255, 255, 255, 255},
+    .startColor = {255, 255, 100, 255},
     .endColor = {255, 255, 255, 0},
-    .particleSize = {1, 1},
+    .startSize = {5, 5},
+    .endSize = {0, 0},
     .particleTexture = NULL,
 
     .gravity = {0, 0},
-    .drag = 0.3,
+    .drag = 2.7,
 
     .particles = NULL,
     .readyIndex = 0,

@@ -4,45 +4,68 @@
 #include <timer.h>
 #include <random.h>
 
-void ParticleEmitter_SetMaxParticles(ParticleEmitter* emitter, int maxParticles) {
-    emitter->maxParticles = maxParticles;
-    emitter->particles = realloc(emitter->particles, sizeof(Particle) * emitter->maxParticles);
-}
 
 void ParticleEmitter_Emit(ParticleEmitter* emitter) {
     if (emitter->readyIndex == emitter->maxParticles) return;
-    emitter->particles[emitter->readyIndex].position = emitter->position;
-    emitter->particles[emitter->readyIndex].direction = Vec2_RotateDegrees(emitter->direction, RandFloat(-emitter->angleRange / 2, emitter->angleRange / 2));
-    emitter->particles[emitter->readyIndex].speed = emitter->particleSpeed;
-    emitter->particles[emitter->readyIndex].alive = true;
-    emitter->particles[emitter->readyIndex].maxLifeTime = emitter->particleLifetime;
-    emitter->particles[emitter->readyIndex].timeAlive = 0;
-    emitter->readyIndex = ParticleEmitter_GetNextReady(emitter);
-}
+    Particle* particle = &emitter->particles[emitter->readyIndex];
+    particle->position = emitter->position;
+    particle->direction = Vec2_RotateDegrees(emitter->direction, RandFloat(-emitter->angleRange / 2, emitter->angleRange / 2));
+    particle->speed = emitter->particleSpeed;
+    particle->alive = true;
+    particle->maxLifeTime = emitter->particleLifetime;
+    particle->timeAlive = 0;
 
-int ParticleEmitter_GetNextReady(ParticleEmitter* emitter) {
-    for (int i = 0; i < emitter->maxParticles; i++) {
-        if (!emitter->particles[i].alive) return i;
-    }
-    return emitter->maxParticles;
+    particle->color = emitter->startColor;
+    particle->size = emitter->startSize;
+    particle->rotation = 0;
+    particle->rotationSpeed = 0;
+
+    particle->velocity = Vec2_Zero;
+    particle->acceleration = emitter->gravity;
+    particle->drag = emitter->drag; 
+
+    particle->initialSpeed = emitter->particleSpeed;
+    particle->initialColor = emitter->startColor;
+    particle->initialSize = emitter->startSize;
+
+    emitter->readyIndex = ParticleEmitter_GetNextReady(emitter);
 }
 
 void ParticleEmitter_UpdateParticles(ParticleEmitter* emitter) {
     for (int i = 0; i < emitter->maxParticles; i++) {
-        if (!emitter->particles[i].alive) {
-            continue;
-        }
-        emitter->particles[i].timeAlive += Time->deltaTimeSeconds;
-        if (emitter->particles[i].timeAlive >= emitter->particles[i].maxLifeTime) {
-            emitter->particles[i].alive = false;
+        Particle* particle = &emitter->particles[i];
+        if (!particle->alive) continue;
+        
+        particle->timeAlive += Time->deltaTimeSeconds;
+        if (particle->timeAlive >= particle->maxLifeTime) {
+            particle->alive = false;
             emitter->readyIndex = i;
         }
+        // Movement
         if (emitter->custom_Movement) {
             emitter->custom_Movement(&emitter->particles[i]);
         } else {
-            emitter->particles[i].position.x += emitter->particles[i].direction.x * emitter->particles[i].speed * Time->deltaTimeSeconds;
-            emitter->particles[i].position.y += emitter->particles[i].direction.y * emitter->particles[i].speed * Time->deltaTimeSeconds;
+            particle->speed -= Time->deltaTimeSeconds * particle->speed * particle->drag;
+            particle->velocity = Vec2_Multiply(particle->direction, particle->speed);
+            particle->velocity = Vec2_Add(particle->velocity, particle->acceleration);
+            particle->velocity = Vec2_Add(particle->velocity, emitter->gravity);
+            particle->position.x += particle->velocity.x * Time->deltaTimeSeconds;
+            particle->position.y += particle->velocity.y * Time->deltaTimeSeconds;
         }
+
+        // Color
+        float t = particle->timeAlive / particle->maxLifeTime;
+        particle->color.r = particle->initialColor.r + (emitter->endColor.r - emitter->startColor.r) * t;
+        particle->color.g = particle->initialColor.g + (emitter->endColor.g - emitter->startColor.g) * t;   
+        particle->color.b = particle->initialColor.b + (emitter->endColor.b - emitter->startColor.b) * t;
+        particle->color.a = particle->initialColor.a + (emitter->endColor.a - emitter->startColor.a) * t;
+
+        // Size
+        particle->size.x = particle->initialSize.x + (emitter->endSize.x - emitter->startSize.x) * t;
+        particle->size.y = particle->initialSize.y + (emitter->endSize.y - emitter->startSize.y) * t;
+
+        // Rotation
+        particle->rotation += particle->rotationSpeed * Time->deltaTimeSeconds;
     }
 }
 
@@ -64,16 +87,38 @@ void ParticleEmitter_Update(ParticleEmitter* emitter) {
 
 void ParticleEmitter_Render(ParticleEmitter* emitter) {
     for (int i = 0; i < emitter->maxParticles; i++) {
-        if (!emitter->particles[i].alive) {
-            continue;
-        }
+        Particle* particle = &emitter->particles[i];
+        if (!emitter->particles[i].alive || particle->color.a <= 0) continue;
+        
         SDL_Rect rect = {
-            emitter->particles[i].position.x,
-            emitter->particles[i].position.y,
-            1,
-            1
+            particle->position.x,
+            particle->position.y,
+            particle->size.x,
+            particle->size.y
         };
-        SDL_SetRenderDrawColor(app.setup.renderer, 255, 255, 255, 255);
+        SDL_SetRenderDrawColor(app.setup.renderer, 
+                                particle->color.r, 
+                                particle->color.g, 
+                                particle->color.b, 
+                                particle->color.a);
         SDL_RenderFillRect(app.setup.renderer, &rect);
     }
+}
+
+void ParticleEmitter_SetMaxParticles(ParticleEmitter* emitter, int maxParticles) {
+    emitter->maxParticles = maxParticles;
+    emitter->particles = realloc(emitter->particles, sizeof(Particle) * emitter->maxParticles);
+}
+
+
+int ParticleEmitter_GetNextReady(ParticleEmitter* emitter) {
+    for (int i = 0; i < emitter->maxParticles; i++) {
+        if (!emitter->particles[i].alive) return i;
+    }
+    return emitter->maxParticles;
+}
+
+void ParticleEmitter_DestroyEmitter(ParticleEmitter* emitter) {
+    free(emitter->particles);
+    free(emitter);
 }
