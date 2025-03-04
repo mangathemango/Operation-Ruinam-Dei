@@ -45,3 +45,8 @@ void Player_WrapAroundScreen()
         player.state.position.y = app.config.screen_height;
     }
 }
+
+void ResetDirection() //Reseting player.state.direction to 0, 0
+{
+    player.state.direction = Vec2_Zero;
+}
