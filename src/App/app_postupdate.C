@@ -15,11 +15,6 @@ int App_PostUpdate() {
     SDL_SetRenderDrawColor(app.setup.renderer, 0, 0, 0, 255);
     SDL_RenderClear(app.setup.renderer);
     
-    // Draw to screen texture
-    if (test_emitter != NULL) {
-        test_emitter->position = Input->mouse.position;
-        ParticleEmitter_Update(test_emitter);
-    }
     Player_PostUpdate();
 
     // Reset render target to window
