@@ -15,8 +15,10 @@ int App_PostUpdate() {
     SDL_RenderClear(app.setup.renderer);
     
     // Draw to screen texture
-    test_emitter->position = player.state.position;
-    ParticleEmitter_Update(test_emitter);
+    if (test_emitter != NULL) {
+        test_emitter->position = player.state.position;
+        ParticleEmitter_Update(test_emitter);
+    }
     Player_PostUpdate();
 
     // Reset render target to window

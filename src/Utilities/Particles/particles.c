@@ -40,6 +40,7 @@ void ParticleEmitter_UpdateParticles(ParticleEmitter* emitter) {
         if (particle->timeAlive >= particle->maxLifeTime) {
             particle->alive = false;
             emitter->readyIndex = i;
+            continue;
         }
         // Movement
         if (emitter->custom_Movement) {
@@ -70,19 +71,40 @@ void ParticleEmitter_UpdateParticles(ParticleEmitter* emitter) {
 }
 
 void ParticleEmitter_Update(ParticleEmitter* emitter) {
-    static Timer* emissionTimer = NULL;
-    if (emissionTimer == NULL) {
-        emissionTimer = Timer_Create(emitter->emissionRate);
-        Timer_Start(emissionTimer);
+    ParticleEmitter_UpdateParticles(emitter);
+    ParticleEmitter_Render(emitter);    
+
+    // Destroy emitter when all of its particles are gone
+    if (!emitter->active) {
+        if (ParticleEmitter_ParticlesAlive(emitter)) return;
+        if (emitter->destroyWhenDone) {
+            SDL_Log("Emitter Destroyed");
+            ParticleEmitter_DestroyEmitter(emitter);
+            return;
+        }
+        return;
     }
-    if (Timer_IsFinished(emissionTimer)) {
+
+    // Emit particles based on timer
+    if (emitter->emissionTimer == NULL) {
+        emitter->emissionTimer = Timer_Create(emitter->emissionRate);
+        Timer_Start(emitter->emissionTimer);
+    }
+    if (Timer_IsFinished(emitter->emissionTimer)) {
         for (int i = 0; i < emitter->emissionNumber; i++) {
             ParticleEmitter_Emit(emitter);
         }
-        Timer_Start(emissionTimer);
+        Timer_Start(emitter->emissionTimer);
     }
-    ParticleEmitter_UpdateParticles(emitter);
-    ParticleEmitter_Render(emitter);    
+
+    emitter->emitterAge += Time->deltaTimeSeconds;
+    if (emitter->emitterLifetime > 0 && emitter->emitterAge >= emitter->emitterLifetime) {
+        emitter->loopCount--;
+        emitter->emitterAge = 0;
+        if (emitter->loopCount == 0) {
+            emitter->active = false;
+        }
+    }
 }
 
 void ParticleEmitter_Render(ParticleEmitter* emitter) {
@@ -119,6 +141,16 @@ int ParticleEmitter_GetNextReady(ParticleEmitter* emitter) {
 }
 
 void ParticleEmitter_DestroyEmitter(ParticleEmitter* emitter) {
+    if (!emitter) return;
     free(emitter->particles);
+    Timer_Destroy(emitter->emissionTimer);
+    *(emitter->selfReference) = NULL;
     free(emitter);
+}
+
+bool ParticleEmitter_ParticlesAlive(ParticleEmitter* emitter) {
+    for (int i = 0; i < emitter->maxParticles; i++) {
+        if (emitter->particles[i].alive) return true;
+    }
+    return false;
 }

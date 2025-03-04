@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <vec2.h>
 #include <stdbool.h>
+#include <timer.h>
 
 typedef struct {
     // Current fields
@@ -32,7 +33,7 @@ typedef struct {
 } Particle;
 
 
-typedef struct {
+typedef struct ParticleEmitter {
     // Emitter Properties
     Vec2 position;                          // Position of the emitter
     
@@ -48,6 +49,7 @@ typedef struct {
     float emitterLifetime;                  // How long the emitter is active in seconds
     float emitterAge;                       // How long the emitter has been active in seconds
     int loopCount;                          // Number of times to loop. -1 for Infinite.
+    bool destroyWhenDone;                   // Should emitter be freed when particles are gone?
     
     // Particle Properties
     float particleLifetime;                 // How long particles live in seconds  
@@ -66,8 +68,10 @@ typedef struct {
     float drag;                          // Air resistance factor
 
     // Runtime State
+    Timer* emissionTimer;                   // Timer for emission control
     Particle* particles;                    // Array of particles
-    int readyIndex;                         // Next available particle index
+    int readyIndex;      
+    struct ParticleEmitter** selfReference;                   // Next available particle index
 } ParticleEmitter;
 
 void ParticleEmitter_SetMaxParticles(ParticleEmitter* emitter, int maxParticles);
@@ -77,3 +81,4 @@ void ParticleEmitter_UpdateParticles(ParticleEmitter* emitter);
 void ParticleEmitter_Update(ParticleEmitter* emitter);
 void ParticleEmitter_Render(ParticleEmitter* emitter);
 void ParticleEmitter_DestroyEmitter(ParticleEmitter* emitter);
+bool ParticleEmitter_ParticlesAlive(ParticleEmitter* emitter);

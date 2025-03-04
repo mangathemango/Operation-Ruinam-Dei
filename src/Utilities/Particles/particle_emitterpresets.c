@@ -10,12 +10,13 @@ ParticleEmitter Default_ParticleEmitter = {
     .angleRange = 60,
 
     .active = true,
-    .emitterLifetime = 0,
+    .emitterLifetime = 1,
     .emitterAge = 0,
-    .loopCount = -1,
+    .loopCount = 5,
+    .destroyWhenDone = true,
 
     .particleLifetime = 2,
-    .particleSpeed = 400,
+    .particleSpeed = 200,
     .custom_Movement = NULL,
 
     .startColor = {255, 255, 100, 255},
@@ -29,7 +30,7 @@ ParticleEmitter Default_ParticleEmitter = {
 
     .particles = NULL,
     .readyIndex = 0,
-
+    .selfReference = NULL,
 };
 
 ParticleEmitter* test_emitter = NULL;
