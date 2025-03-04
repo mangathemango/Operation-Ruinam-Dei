@@ -1,6 +1,7 @@
 #include <app.h>
 #include <player.h>
 #include <particle_emitterpresets.h>
+#include <input.h>
 
 /* 
 *   This function is called every frame of the program AFTER App_Event_Handler().
@@ -16,7 +17,7 @@ int App_PostUpdate() {
     
     // Draw to screen texture
     if (test_emitter != NULL) {
-        test_emitter->position = player.state.position;
+        test_emitter->position = Input->mouse.position;
         ParticleEmitter_Update(test_emitter);
     }
     Player_PostUpdate();
