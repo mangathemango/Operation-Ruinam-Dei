@@ -8,11 +8,13 @@
 #define PLAYER_H
 #include <vec2.h>
 #include <animation.h>
+#include <stdbool.h>
 
 typedef struct {
     Vec2 position;
     Vec2 direction; //This is added to know the players last direction
     bool movementLocked; //to know if the movement is locked
+    bool moving;    
 } PlayerState;
 
 typedef struct {
@@ -35,6 +37,7 @@ int Player_Render();
 
 int Player_Start();
 int Player_PostUpdate();
+int Player_Preupdate();
 
 // Actions
 int Player_Move(Vec2 direction);
@@ -44,4 +47,6 @@ void ResetDirection();
 int dashing();
 int dashCooldown();
 
+// Animations
+int Player_AnimationInit();
 #endif

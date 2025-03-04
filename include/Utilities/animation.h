@@ -1,3 +1,25 @@
+/*
+    @file animation.h
+*   An simple animation system capable of loading a spritesheet with fixed sized frames
+?   The spritesheet you select should have all of its states on it, like running, walking etc.
+!   This system doesn't support loading animation clips from multiple files into one animation.
+?   To load an animation, you need 4 steps.
+?
+?   Step 1: Create animation with frame size and frame number
+?       *Animation animation = Animation_Create(animationTexture, (Vec2) {x, y}, n);
+?   
+?   Step 2: Select frames from the spritesheet to make into a clip.
+?   Note: Index counts from 0, and goes from left to right, THEN up to down
+?   For example: If your running animation is from frames with index 5 to 10, you can run
+?       Animation_AddClipFromGrid(animation, "running", 5, 10, 0.4f, true); 
+?   
+?   Step 3: Play the animation:
+?       Animation_Play(animation, "running");
+?
+?   Step 4: 
+*/
+
+
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
@@ -20,10 +42,12 @@ typedef struct {
 } AnimationClip;
 
 typedef struct {
-    SDL_Texture* texture;   // Spritesheet texture
-    AnimationClip* clips;   // Array of different animations
+    SDL_Texture* spritesheet;   // Spritesheet texture
+    AnimationClip* clips;  // Array of different animations
     int clipCount;          // Number of animation clips
     
+    Vec2 frameSize; 
+    int frameCount;
     // Current animation state
     int currentClip;        // Currently active clip index
     int currentFrame;       // Current frame within the clip
@@ -34,14 +58,13 @@ typedef struct {
 
 
 // Create and destroy animations
-Animation* Animation_Create(SDL_Texture* spritesheet);
+Animation* Animation_Create(SDL_Texture* spritesheet, Vec2 frameSize, int frameCount);
 void Animation_Destroy(Animation* animation);
 
 // Add animation clips
-void Animation_AddClip(Animation* animation, const char* name, 
-                      AnimationFrame* frames, int frameCount, 
-                      float frameDuration, bool looping);
-AnimationFrame* Animation_GetFramesFromGrid(SDL_Texture *texture, Vec2 frameSize, int frameCount);
+int Animation_AddClipFromGrid(Animation* animation, const char* name,
+                                int startFrameIndex, int endFrameIndex,
+                                float frameDuration, bool looping );
 // Animation control
 void Animation_Play(Animation* animation, const char* clipName);
 void Animation_Stop(Animation* animation);

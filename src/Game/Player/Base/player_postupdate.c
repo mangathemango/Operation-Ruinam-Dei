@@ -6,6 +6,7 @@
 ?   It updates the player's input, position, and rendering.
 */
 int Player_PostUpdate() {
+
     if(player.state.movementLocked == true)//Basically, if the movement is locked, it dash,if not, its handles normally
     {
         dashing();
@@ -15,6 +16,19 @@ int Player_PostUpdate() {
         ResetDirection();
         Player_Input_Handler();
     }
+
+    // Only change animation when movement state changes
+    static bool wasMoving = false;
+    if (player.state.moving != wasMoving) {
+        if (player.state.moving) {
+            Animation_Play(player.config.animation, "spin");
+        } else {
+            Animation_Play(player.config.animation, "idle");
+        }
+        wasMoving = player.state.moving;
+    }
+
+
     Animation_Update(player.config.animation);
     Player_WrapAroundScreen();
     Player_Render();

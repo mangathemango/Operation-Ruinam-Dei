@@ -1,6 +1,7 @@
 #include <app.h>
 #include <input.h>
 #include <time_system.h>
+#include <player.h>
 
 /* 
 *   This function is called every frame of the program BEFORE App_Event_Handler().
@@ -16,5 +17,6 @@ int App_PreUpdate() {
     
     Input_PreUpdate();
     Time_PreUpdate();
+    Player_Preupdate();
     return 0;
 }
