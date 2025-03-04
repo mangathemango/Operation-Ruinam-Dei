@@ -11,6 +11,8 @@
 
 typedef struct {
     Vec2 position;
+    Vec2 direction; //This is added to know the players last direction
+    bool movementLocked; //to know if the movement is locked
 } PlayerState;
 
 typedef struct {
@@ -38,5 +40,8 @@ int Player_PostUpdate();
 int Player_Move(Vec2 direction);
 int Player_Dash(Vec2 direction);
 void Player_WrapAroundScreen(); //! This is temporary and will be removed later.
+void ResetDirection();
+int dashing();
+int dashCooldown();
 
 #endif
